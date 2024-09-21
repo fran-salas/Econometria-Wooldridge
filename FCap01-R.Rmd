@@ -1,0 +1,26 @@
+---
+title: "FCap01"
+author: "Fran"
+date: "2024-09-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# 7th edition on CRAN
+install.packages("wooldridge")
+# 7th edition
+remotes::install_github("JustinMShea/wooldridge")
+```
+
+```{r access dataset}
+library(wooldridge)
+
+data("wage1")
+
+wageModel <- lm(lwage ~ educ + exper + tenure, data = wage1)
+
+summary(wageModel)
+```
+

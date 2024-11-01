@@ -1,0 +1,88 @@
+---
+title: "FCap03"
+author: "Fran"
+date: "2024-09-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# #7th edition on CRAN
+# install.packages("wooldridge")
+## 7th edition
+# remotes::install_github("JustinMShea/wooldridge")
+
+```
+
+```{r load data}
+library(wooldridge)
+library(ggplot2)
+data("ATTEND")
+
+attend <-wooldridge::attend
+library(stargazer) # Load package
+stargazer(attend, type = "text", iqr = TRUE, median = TRUE)
+
+```
+
+```{r simple reg}
+simple <- lm(final ~ missed,data = attend)
+stargazer(simple,type = "text")
+
+ggplot(data = attend, aes(y = final, x = missed)) +
+geom_jitter() +
+stat_smooth(method = "lm") +
+theme(aspect.ratio = 1)
+```
+
+```{r multiple reg}
+multi <- lm(final ~ missed+priGPA,data = attend)
+stargazer(simple,multi,type = "text")
+cor(attend$missed,attend$priGPA)
+```
+
+```{r multiple reg}
+
+wage2<-wooldridge::wage2
+simple <- lm(lwage ~ educ,data = wage2)
+multi <- lm(lwage ~ educ+IQ,data = wage2)
+stargazer(simple,multi,type = "text")
+
+cor(wage2$educ,wage2$IQ)
+
+```
+
+```{r multiple reg}
+
+wage2<-wooldridge::wage2
+# Create the subpopulation for IQ < 94
+wage2_lowIQ <- wage2[wage2$IQ = 93, ]
+
+# Multiple regression model on the subpopulation
+multi_lowIQ <- lm(lwage ~ educ + IQ, data = wage2_lowIQ)
+
+# Display the models using stargazer
+stargazer(multi, multi_lowIQ, type = "text")
+
+
+```
+
+
+```{r reg coefficients}
+
+rm(list = ls());
+wage2 <- wooldridge::wage2
+
+ # Multivariate regression
+
+ # Display coefficients
+ # 1st step: Regress educ on IQ and experience
+
+ # Save residuals from auxiliary 1st-step regression
+
+ # 2nd step: Regress ln(wage) on residuals frem 1st step
+
+ # Display coefficients
+
+```

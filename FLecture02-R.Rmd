@@ -1,0 +1,74 @@
+---
+title: "FCap02"
+author: "Fran"
+date: "2024-09-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# #7th edition on CRAN
+# install.packages("wooldridge")
+## 7th edition
+# remotes::install_github("JustinMShea/wooldridge")
+```
+
+```{r access dataset}
+library(wooldridge)
+
+data("wage1")
+rm(list = ls())
+
+wage1 <- wooldridge::wage1
+
+library(stargazer) # Load package
+stargazer(wage1, type = "text", iqr = TRUE, median = TRUE) #iqr = T display  interquartile range (IQR) and median
+
+```
+
+```{r regression model}
+# Regress wage on education
+myreg <- lm(wage ~ educ, data = wage1)
+
+# Summary of regression results
+summary(myreg)
+
+```
+```{r}
+# Summarize reg using stargazer package
+stargazer(myreg, type = "text")
+```
+```{r plot}
+library(ggplot2)
+
+# Create scatter plot with regression line
+ggplot(wage1, aes(x = educ, y = wage)) +
+  geom_point(color = 'blue') +  # Scatter points
+  geom_smooth(method = 'lm', color = 'red', se = FALSE) +  # Regression line
+  labs(title = 'Wage vs Education', x = 'Education', y = 'Wage') +
+  theme_minimal()
+```
+
+
+
+```{r OLS regression properties}
+# Confirm three regression properties
+rm(list = ls())
+wage1 <- wooldridge::wage1
+
+regresults <- lm(wage ~ educ, data = wage1)
+
+bhat <- coef(regresults)
+yhat <- fitted(regresults)
+uhat <- resid(regresults)
+
+ # Confirm property 1
+mean(uhat)
+
+# Confirm property 2
+cor(wage1$educ, uhat)
+# Confirm property 3
+mean(wage1$wage)
+bhat[1] + bhat[2] * mean(wage1$educ)
+```
